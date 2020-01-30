@@ -1,0 +1,33 @@
+name: PPPoE_Account
+on: [push]
+env:
+  GO111MODULE: on
+jobs:
+  build:
+    name: Build-PPPoE_Account
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+    
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y libpcap-dev
+        sudo apt install -y libpcap0.8-dev
+        go get -v -t ./...
+        
+    - name: Build
+      run: go build -v -o ./PPPoE_Account .
+      
+    - name: Uploading artifact
+      uses: actions/upload-artifact@master
+      with:
+          name: PPPoE_Account
+          path: PPPoE_Account
